@@ -40,12 +40,12 @@ class CalcController {
         this.setLastNumberToDisplay();
     }
 
-    getLastOperantion(){//ultima operacao
+    getLastOperation(){//ultima operacao
        return this._operation[this._operation.length-1];
        
     }
 
-    setLastOperantion(value){//colocar na mesma posicao do array
+    setLastOperation(value){//colocar na mesma posicao do array
         this._operation[this._operation.length-1] = value;
     }
 
@@ -129,13 +129,11 @@ class CalcController {
         }
     }
 
-    addOperantion(value){//operacao da calculadora
-        console.log("Ultima operacao " + isNaN(this.getLastOperantion()));
-        if (isNaN(this.getLastOperantion())) {//string
+    addOperation(value){//operacao da calculadora
+        console.log("Ultima operacao " + isNaN(this.getLastOperation()));
+        if (isNaN(this.getLastOperation())) {//string
             if (this.isOperator(value)) {//se for uma operador + - / *
-                this.setLastOperantion(value); //caso for um operador tem substituir
-            }else if(isNaN(value)){
-
+                this.setLastOperation(value); //caso for um operador tem substituir
             } else {
                 this.pushOperation(value); //coloca o elemento no final do array
                 this.setLastNumberToDisplay();
@@ -144,8 +142,8 @@ class CalcController {
             if (this.isOperator(value)) {//se for uma operador adiciona o elemento no array
                 this.pushOperation(value);//exauta o push que adiconar o elemento e fazer calculo dos 3 elementos
             } else {//nao for faz concaternar numeros
-                let newValue = this.getLastOperantion().toString() + value.toString();//concatenar
-                this.setLastOperantion(parseInt(newValue));   
+                let newValue = this.getLastOperation().toString() + value.toString();//concatenar
+                this.setLastOperation(parseFloat(newValue));   
             }
             this.setLastNumberToDisplay();
         }
@@ -153,6 +151,11 @@ class CalcController {
     }
     setError(){//erro
         this.displayCalc = "Error";
+    }
+
+    addDot(){
+        let lastOperation = this.getLastOperation();
+
     }
 
     exectBtn(value){
@@ -164,25 +167,25 @@ class CalcController {
                 this.cancelEntry();
                 break;
             case "soma":
-                this.addOperantion("+");
+                this.addOperation("+");
                 break;
             case "subtracao":
-                this.addOperantion("-");
+                this.addOperation("-");
                 break;
             case "multiplicacao":
-                this.addOperantion("*");
+                this.addOperation("*");
                 break;
             case "divisao":
-                this.addOperantion("/");
+                this.addOperation("/");
                 break;
             case "porcento":
-                this.addOperantion("%");
+                this.addOperation("%");
                 break;
             case "igual":
                 this.calc();
                 break;
             case "ponto":
-                this.addOperantion(".");
+                this.addDot();
                 break;
             case '0':
             case '1':
@@ -194,7 +197,7 @@ class CalcController {
             case '7':
             case '8':
             case '9':
-                this.addOperantion(parseInt(value));
+                this.addOperation(parseInt(value));
                 break;
             default:
                 this.setError();
