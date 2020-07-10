@@ -32,6 +32,8 @@ class CalcController {
     
     clearAll(){//limpar a calculadora
         this._operation = [];
+        this._lastOperator = '';
+        this._lastNumber = '';
         this.setLastNumberToDisplay();
     }
 
@@ -155,7 +157,13 @@ class CalcController {
 
     addDot(){
         let lastOperation = this.getLastOperation();
+        if (this.isOperator(lastOperation) || !lastOperation) {//caso for vazio ou um operador
+            this.pushOperation("0.");
+        } else {//caso for um numero 
+            this.setLastOperation(lastOperation.toString() + '.');
+        }
 
+        this.setLastNumberToDisplay();
     }
 
     exectBtn(value){
