@@ -145,7 +145,7 @@ class CalcController {
                 this.pushOperation(value);//exauta o push que adiconar o elemento e fazer calculo dos 3 elementos
             } else {//nao for faz concaternar numeros
                 let newValue = this.getLastOperation().toString() + value.toString();//concatenar
-                this.setLastOperation(parseFloat(newValue));   
+                this.setLastOperation(newValue);   
             }
             this.setLastNumberToDisplay();
         }
@@ -157,6 +157,10 @@ class CalcController {
 
     addDot(){
         let lastOperation = this.getLastOperation();
+
+        if (typeof lastOperation === 'string' && lastOperation.split('').indexOf('.') > -1) 
+                return;//se existe e for string se tiver ponto nao faca nada
+
         if (this.isOperator(lastOperation) || !lastOperation) {//caso for vazio ou um operador
             this.pushOperation("0.");
         } else {//caso for um numero 
