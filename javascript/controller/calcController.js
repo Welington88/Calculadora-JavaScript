@@ -10,7 +10,10 @@ class CalcController {
         this._currentDate;
         this.initialize();
         this.initButtonsEvents();
+        this.initKeyboard();
     }
+
+    
 
     initialize(){//inializar a calculadora
         this.setDisplayDateTime();
@@ -22,6 +25,46 @@ class CalcController {
         /*setTimeout(()=>{
             clearInterval(interval);
         });//stop the interval*/
+    }
+
+    initKeyboard(){//key down aperta o teclas - key press pressiona tecla - key up quando solta a tecla
+        document.addEventListener('keyup', e=>{
+            console.log(e.key);
+            switch (e.key) {
+                case "Escape":
+                    this.clearAll();
+                    break;
+                case "Backspace":
+                    this.cancelEntry();
+                    break;
+                case "+":
+                case "-":
+                case "*":
+                case "/":
+                case "%":
+                    this.addOperation(e.key);
+                case "=":
+                case "Enter":
+                    this.calc();
+                    break;
+                case ".":
+                case ",":
+                    this.addDot();
+                    break;
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    this.addOperation(parseInt(e.key));
+                    break;
+            }
+        });
     }
 
     addEventListenerAll(element, events, fn){// por evento do click do mouse a passar mouse por cima
@@ -44,7 +87,6 @@ class CalcController {
 
     getLastOperation(){//ultima operacao
        return this._operation[this._operation.length-1];
-       
     }
 
     setLastOperation(value){//colocar na mesma posicao do array
