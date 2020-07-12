@@ -145,7 +145,14 @@ class CalcController {
     }
 
     getResult(){
-        return eval(this._operation.join("")); // join pegar um string tira as virgulas e excuta o que tem dentro
+        try {
+            return eval(this._operation.join("")); // join pegar um string tira as virgulas e excuta o que tem dentro    
+        } catch (e) {
+            setTimeout(()=>{
+                this.setError();
+            },1);//esperar 1 milesegundo para executar a acao
+        }
+        
     }
 
     calc(){
@@ -336,10 +343,6 @@ class CalcController {
     }
 
     set displayTime(value){
-        if (value.toString().length>10) {
-            this.setError();
-            return false;
-        }
         return this._timeEl.innerHTML = value;
     }
     
@@ -348,6 +351,10 @@ class CalcController {
     }
 
     set displayCalc(value){
+        if (value.toString().length>10) {
+            this.setError();
+            return false;
+        }
         this._displayCalcEl.innerHTML = value;
     }
 
