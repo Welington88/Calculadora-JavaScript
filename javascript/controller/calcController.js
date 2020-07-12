@@ -8,12 +8,29 @@ class CalcController {
         this._dateEl = document.querySelector("#data");
         this._timeEl = document.querySelector("#hora");
         this._currentDate;
+        this._audioOnOff=false;
+        this._audio = new Audio('click.mp3');
         this.initialize();
         this.initButtonsEvents();
         this.initKeyboard();
     }
 
-    
+    copyToClipboard(){//copiar ctrl + c
+        let input = document.createElement('input');//criou o elemento
+        input.value = this.displayCalc;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand("Copy");
+        input.remove();
+    }
+
+    pasteFromClipboard(){//colar ctrl + v
+        document.addEventListener('paste', e=>{
+           let text = e.clipboardData.getData('Text');
+           this.displayCalc = parseFloat(text);
+           console.log(text);
+        });
+    }
 
     initialize(){//inializar a calculadora
         this.setDisplayDateTime();
@@ -22,13 +39,33 @@ class CalcController {
             this.setDisplayDateTime();
         },1000);
 
+        this.setLastNumberToDisplay();
+        this.pasteFromClipboard();
+
+        document.querySelectorAll('.btn-ac').forEach(btn=>{
+            btn.addEventListener('dblclick', e=>{//adiconar dupli click
+                this.toggleAudio();
+            });
+        });
         /*setTimeout(()=>{
             clearInterval(interval);
         });//stop the interval*/
     }
 
+    toggleAudio(){
+        this._audioOnOff = !this._audioOnOff; //inverte v --> f and f --> v
+    }
+
+    playAudio(){
+        if (this._audioOnOff) {//quando tiver ligado
+            this._audio.currentTime = 0;
+            this._audio.play();//executar o audio
+        }
+    }
+
     initKeyboard(){//key down aperta o teclas - key press pressiona tecla - key up quando solta a tecla
         document.addEventListener('keyup', e=>{
+            this.playAudio();
             console.log(e.key);
             switch (e.key) {
                 case "Escape":
@@ -62,6 +99,9 @@ class CalcController {
                 case '8':
                 case '9':
                     this.addOperation(parseInt(e.key));
+                    break;
+                case 'c':
+                    if(e.ctrlKey) this.copyToClipboard();//se apertou o ctrl c
                     break;
             }
         });
@@ -201,7 +241,7 @@ class CalcController {
         let lastOperation = this.getLastOperation();
 
         if (typeof lastOperation === 'string' && lastOperation.split('').indexOf('.') > -1) 
-                return;//se existe e for string se tiver ponto nao faca nada
+            return;//se existe e for string se tiver ponto nao faca nada
 
         if (this.isOperator(lastOperation) || !lastOperation) {//caso for vazio ou um operador
             this.pushOperation("0.");
@@ -213,6 +253,7 @@ class CalcController {
     }
 
     exectBtn(value){
+        this.playAudio();
         switch (value) {
             case "ac":
                 this.clearAll();
